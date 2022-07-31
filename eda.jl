@@ -1,5 +1,6 @@
 using DataFrames, CSV
 using Gadfly
+using Plots
 
 df = DataFrame(CSV.File("001-eda-happines/data/2021.csv"))
 
@@ -7,7 +8,6 @@ life_expectancy = sort!(select(df, "Country name", "Healthy life expectancy"),
 		       :"Healthy life expectancy", 
 		       rev = true)
 
-#bar(life_expectancy, y="Country name", x="Healthy life expectancy", kind = "bar")
 bar(life_expectancy[:,"Country name"], 
     life_expectancy[:,"Healthy life expectancy"] ,
     title="Healthy Life expectancy",
@@ -17,24 +17,23 @@ bar(life_expectancy[:,"Country name"],
     size= (1000,600)
    )
 
-bar(first(life_expectancy[:,"Country name"], 10), 
-    first(life_expectancy[:,"Healthy life expectancy"],10) ,
-    title="Healthy Life expectancy",
-    xrotation = 50,
+
+
+function barchar_countries(df, fragment_df, var, color, number)
+  bar(
+    fragment_df(df[:,"Country name"], number), 
+    fragment_df(df[:,var], number) ,
+    title="$fragment_df $number countries by $var",
+    xrotation = 45,
     legend = false,
-    color = "green",
+    xticks = :all,
+    color = color,
     size= (1000,600)
    )
-bar(last(life_expectancy[:,"Country name"], 10), 
-    last(life_expectancy[:,"Healthy life expectancy"],10) ,
-    title="Healthy Life expectancy",
-    xrotation = 50,
-    legend = false,
-    color = "red",
-    size= (1000,600)
-   )
+  savefig("$fragment_df $number countries by $var.png")
+end
 
-
-
-
-
+barchar_countries(life_expectancy,
+		 last,
+		 "Healthy life expectancy",
+		 "red", 20)
