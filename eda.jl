@@ -1,6 +1,6 @@
 using DataFrames, CSV
-using Gadfly
 using Plots
+theme(:ggplot2)
 
 df = DataFrame(CSV.File("001-eda-happines/data/2021.csv"))
 
@@ -37,3 +37,10 @@ barchar_countries(life_expectancy,
 		 last,
 		 "Healthy life expectancy",
 		 "red", 20)
+
+scatter(df[:,"Social support"],
+	df[:,"Healthy life expectancy"],
+	xaxis = "Healthy life expectancy",
+	yaxis = "Social support",
+	label = "countries"
+	)
